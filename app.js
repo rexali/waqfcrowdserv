@@ -1,12 +1,26 @@
 const express = require("express");
+
+const { userRouter } = require('./routes/userRoute');
+
 const app = express();
 
 const PORT = 3000;
 
-app.get("/",(req, res)=>{
-     res.send("Hello World!")
-});
+app.set('view engine', 'ejs');
 
-app.listen(PORT, ()=>{
-     console.log('The server is listening at port '+PORT)
-})
+app.set('views', 'views');
+
+app.use("/users", userRouter);
+
+// server home
+app.get("/", (req, res) => {
+     res.render("home", {});
+});
+// render 404 page
+app.use((req, res) => {
+     res.status(404).render("404", {});
+});
+// listent to server
+app.listen(PORT, () => {
+     console.log('The server is listening at port ' + PORT);
+});
