@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 /**
  * create connection to the database
- * @param con is mysql connection using:
+ * @param conn is mysql connection using:
  * @param host hostname
  * @param user username
  * @param password password
@@ -14,11 +14,10 @@ dotenv.config();
 function connectDb() {
     
     const conn = mysql.createConnection({
-        host: process.env.host, //"127.0.0.1",
-        port:process.env.port, //"3306",
-        user: process.env.user, //"root",
-        password: process.env.password, //"rexali",
-        database: process.env.database, // "waqfcrowd",
+        host: process.env.DB_POST, //"3306",
+        user: process.env.DB_USER, //"root",
+        password: process.env.DB_PASS, //"rexali",
+        database: process.env.DB_NAME, // "waqfcrowd",
     });
 
     conn.connect(function (err) {
