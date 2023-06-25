@@ -5,7 +5,7 @@ const { transact } = require("../dbase/transact");
  * @param {object} res - response to user request
  */
 const getCarts = async(req, res) => {
-    const sql = "SELECT * FROM donationss";
+    const sql = "SELECT * FROM carts";
     const esc = [];
     res.json(await transact(sql, esc));
 }

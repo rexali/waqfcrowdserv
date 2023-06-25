@@ -9,7 +9,7 @@ const getWaqfs = async (req, res) => {
     const waqfSQL = `select waqfs.waqfId, waqfs.name, waqfs.problem, waqfs.goal,waqfs.purpose, 
     waqfs.description,waqfs.target, waqfs.collectedAmount, waqfs.expectedAmount,waqfs.planPDF, 
     waqfs.rating, waqfs.image,waqfs.isDonationAllowed, waqfs.status, waqfs.createdAt, waqfs.endAt, 
-    locations.address, locations.localGovt, locations.state,locations.country  from waqfs join 
+    locations.address, locations.localGovt, locations.state,locations.country from waqfs join 
     locations on waqfs.waqfId = locations.waqfId;`;
     
     const commentSQL = 'select * from comments';

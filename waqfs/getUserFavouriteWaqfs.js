@@ -1,21 +1,22 @@
 const { transact } = require("../dbase/transact");
-/**
+/** 
  * Get all the waqfs and each related data 
  * @param {object} req - user request
  * @param {object} res - response to user request
  */
-const getUserWaqfs = async (req, res) => {
+const getUserFavouriteWaqfs = async (req, res) => {
     
     const {id} = req.params;
-
     const waqf_esc = [id];
+    console.log(id);
     const esc = [];
 
-    const waqfSQL = `select waqfs.waqfId, waqfs.name, waqfs.problem, waqfs.goal,waqfs.purpose, 
+    const waqfSQL = `select distinct waqfs.waqfId, waqfs.name, waqfs.problem, waqfs.goal,waqfs.purpose, 
     waqfs.description,waqfs.target, waqfs.collectedAmount, waqfs.expectedAmount,waqfs.planPDF, 
     waqfs.rating, waqfs.image,waqfs.isDonationAllowed, waqfs.status, waqfs.createdAt, waqfs.endAt, 
-    locations.address, locations.localGovt, locations.state,locations.country from waqfs join 
-    locations on waqfs.waqfId = locations.waqfId where locations.userId = ?`;
+    locations.address,locations.localGovt, locations.state,locations.country from waqfs join 
+    locations on waqfs.waqfId = locations.waqfId join likes on likes.waqfId = waqfs.waqfId where likes.userId=?;`;
+
     const commentSQL = 'select * from comments';
     const shareSQL = 'select * from shares';
     const donationSQL = 'select * from donations';
@@ -58,5 +59,5 @@ const getUserWaqfs = async (req, res) => {
 };
 
 module.exports = {
-    getUserWaqfs
+    getUserFavouriteWaqfs
 }

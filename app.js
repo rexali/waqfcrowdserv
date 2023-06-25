@@ -1,5 +1,5 @@
 const express = require("express");
-const cookieParser = require("cookie-parser");
+const cookieParser = require("cookie-parser"); 
 const cors = require("cors");
 const jsonwebtoken = require("jsonwebtoken");
 const { expressjwt } = require("express-jwt");
@@ -8,9 +8,6 @@ dotenv.config();
 // const csrf = require('csurf');
 // const expressFormidable = require("express-formidable");
 
-
-const { searchProfiles } = require("./profiles/searchProfiles");
-const { searchProjects } = require("./projects/searchProjects");
 const { profileRouter } = require('./routes/profileRoutes');
 const { projectRouter } = require('./routes/projectRoutes');
 const { commentRouter } = require("./routes/commentRoutes");
@@ -30,11 +27,13 @@ const { volunteerRouter } = require("./routes/volunteerRoutes");
 const { beneficiaryRouter } = require("./routes/beneficiaryRoutes");
 const { partnerRouter } = require("./routes/partnerRoutes");
 const { searchRouter } = require("./routes/searchRoutes");
+const { transact } = require("./dbase/transact");
 
 const app = express();
 
 const PORT = 3000;
-const HOST = "192.168.206.35"; 
+
+const HOST = "192.168.24.35"; 
 
 // for parsing application/json
 app.use(express.json());
@@ -91,25 +90,11 @@ app.use(expressjwt({
      path: [ 
           '/',
           // '/public/index.html',
-          // '/css',
-          // '/js',
-          // '/cart',
-          // '/wish',
-          // '/file',
-          // '/auth',
-          // '/users',
-          // '/support',
-          // '/notification',
-          // '/trnsaction',
-          // '/products',
-          // '/reviews',
-          // '/shipping',
-          // '/promotion',
-          // '/wallet',
           // '/initializedb',
           // '/csrf-token',
+          '/rex',
           '/favicon.ico',
-          '/searchs',
+          '/waqfs/1/favourites',
           '/jwt',
      ]
 })
@@ -146,14 +131,9 @@ app.get("/jwt", (req, res) => {
 // app.get("/csrf-token", (req, res) => {
 //      res.json({ csrfToken: req.csrfToken() })
 //  });
-
-
+// app.get("/rex",async (req,res)=>res.json({affectedRows:0}));
 // server home
 app.get("/", (req, res) => res.render("home", {}));
-// search users
-app.get("/searchuser", searchProfiles);
-// search projects
-app.get("/searchproject", searchProjects);
 // render 404 page
 app.use((req, res) => res.status(404).render("404", {}));
 // listent to server (1) 192.168.1.107 (2) 192.168.70.35 (3) 192.168.1.101

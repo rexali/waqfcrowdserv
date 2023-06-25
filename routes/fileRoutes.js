@@ -1,10 +1,12 @@
 const express = require("express");
 
-const { handleSingleFile } = require("../files/fileHandlers");
+const { handleSingleFile, handleMultipleFiles } = require("../files/fileHandlers");
 
 const fileRouter = express.Router();
 // add an item to cart
-fileRouter.post('/', handleSingleFile);
+fileRouter.post('/file', handleSingleFile);
+// add an item to cart
+fileRouter.post('/files', handleMultipleFiles);
 
 module.exports = {
     fileRouter

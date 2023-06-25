@@ -1,4 +1,4 @@
-const express = require("express"); 
+const express = require("express");  
 
 const { getWaqf } = require("../waqfs/getWaqf");
 const { getWaqfs } = require("../waqfs/getWaqfs");
@@ -6,6 +6,8 @@ const { addWaqf } = require("../waqfs/addWaqf");
 const { getWaqfComments } = require("../waqfs/getWaqfComments");
 const { getUserWaqfs } = require("../waqfs/getUserWaqfs");
 const { deleteUserWaqf } = require("../waqfs/deleteUserWaqf");
+const { isWaqfExists } = require("../waqfs/isWaqfExists");
+const { getUserFavouriteWaqfs } = require("../waqfs/getUserFavouriteWaqfs");
 
 const waqfRouter = express.Router();
 // get a waqf
@@ -20,6 +22,10 @@ waqfRouter.post('/:id', deleteUserWaqf);
 waqfRouter.post("/", addWaqf)
 // get a waqf comments
 waqfRouter.get('/:id/comments', getWaqfComments);
+// get a waqf comments 
+// waqfRouter.get('/:userId/:waqfId', isWaqfExists);
+// get a waqf favourites
+waqfRouter.get('/:id/favourites', getUserFavouriteWaqfs);
 
 module.exports = {
     waqfRouter

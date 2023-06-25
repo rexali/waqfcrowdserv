@@ -1,3 +1,4 @@
+const { json } = require("express");
 const { transact } = require("../dbase/transact");
 const { escapeHTML } = require("../utils/escapeHTML");
 /**
@@ -11,29 +12,54 @@ const addCart = async (req, res) => {
         price,
         category,
         userId,
-        waqfId
+        waqfId,
+        quantity
     } = req.body;
-    
+
     const esc = [
         escapeHTML(price),
         escapeHTML(category),
         escapeHTML(userId),
-        escapeHTML(waqfId)
+        escapeHTML(waqfId),
+        escapeHTML(quantity)
     ];
 
-    const sql = `INSERT INTO carts(
-        price, 
-        category, 
-        userId, 
-        waqfId
-        )VALUES(
-            ?,
-            ?,
-            ?,
-            ?
-            )`;
-            
-    res.json(await transact(sql, esc))
+    const checkSQL = `select * from carts where userId=? and waqfId =? and price=?`;
+    const check_esc = [
+        escapeHTML(userId),
+        escapeHTML(waqfId),
+        escapeHTML(price)
+    ];
+
+    const result = await transact(checkSQL, check_esc);
+
+    if (result.length === 1) {
+        const cartId = result[0].cartId;
+        const updateSQL = `update carts set quantity = carts.quantity + 1 where cartId=?`;
+        const update_esc = [
+            cartId
+        ];
+
+       res.json(await transact(updateSQL, update_esc));
+
+    } else {
+        const sql = `INSERT INTO carts(
+            price, 
+            category, 
+            userId, 
+            waqfId,
+            quantity
+            )VALUES(
+                ?,
+                ?,
+                ?,
+                ?,
+                ?
+                )`;
+
+        res.json(await transact(sql, esc))
+    }
+
 }
 
 module.exports = {

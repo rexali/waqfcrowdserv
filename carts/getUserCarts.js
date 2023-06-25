@@ -1,4 +1,4 @@
-const { transact } = require("../dbase/transact");
+const { transact } = require("../dbase/transact"); 
 /**
  * Read a reply
  * @param {object} req - user request
@@ -11,12 +11,11 @@ const getUserCarts = async (req, res) => {
     const sql = `select 
     users.userId, 
     carts.cartId, 
-    carts.price, 
-    projects.name, 
-    projects.image 
-    from users 
-    join carts on users.userId = carts.userId 
-    join projects on projects.projectId=carts.projectId where users.userId =?;`;
+    carts.price,
+    carts.quantity,
+    waqfs.waqfId, 
+    waqfs.name, 
+    waqfs.image from users join carts on users.userId = carts.userId join waqfs on waqfs.waqfId=carts.waqfId where users.userId =?`;
 
     res.json(await transact(sql, esc));
 }

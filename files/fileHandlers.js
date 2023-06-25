@@ -25,8 +25,10 @@ const handleMultipleFiles = (req, res) => {
       var newpath = './public/uploads/' + files[fileKeys[i]].name;
       fs.copyFile(oldpath, newpath, function (err) {
         if (err) throw err;
-        console.log("success");
-        // res.json({ result: true });
+        if (i === fileKeys.length - 1) {
+          console.log("success");
+          res.json({ result: true });
+        }
       });
     }
   });
