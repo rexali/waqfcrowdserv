@@ -9,33 +9,26 @@ const addNotification = async (req, res) => {
 
     const {
         subject,
-        body,
-        createdAt,
-        updatedAt,
+        message,
         userId,
     } = req.body;
 
     const esc = [
         escapeHTML(subject),
-        escapeHTML(body),
-        escapeHTML(createdAt),
-        escapeHTML(updatedAt),
+        escapeHTML(message),
         escapeHTML(userId),
     ];
 
     const sql = `INSERT INTO notifications(
         subject,
         body,
-        createdAt,
-        updatedAt,
-        userId,
+        userId
         )VALUES(
-            ?,
-            ?,
             ?,
             ?,
             ?
             )`;
+
     res.json(await transact(sql, esc))
 
 }

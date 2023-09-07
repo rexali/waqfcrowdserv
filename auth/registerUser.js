@@ -1,7 +1,7 @@
 const { hashpass } = require("../utils/hashHelper");
 const { v4: uuidv4 } = require("uuid");
 const { escapeHTML } = require("../utils/escapeHTML");
-const { regHTMLMSQ } = require("../messages/regHTMLMSQ");
+const { regHTMLMSQ } = require("../utils/regHTMLMSQ");
 const { transact } = require("../dbase/transact");
 /**
  * Register new user

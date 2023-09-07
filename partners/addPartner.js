@@ -1,4 +1,6 @@
 const { transact } = require("../dbase/transact");
+const { addLocation } = require("../locations/addWaqfLocation");
+const { addPartnerLocation } = require("../locations/addPartnerLocation");
 const { escapeHTML } = require("../utils/escapeHTML");
 /** 
  * Add a new partner
@@ -12,10 +14,6 @@ const addPartner = async (req, res) => {
         lastName,
         email,
         phone,
-        address,
-        localGovt,
-        state,
-        country,
         purpose,
         image,
         role,
@@ -29,10 +27,6 @@ const addPartner = async (req, res) => {
         escapeHTML(lastName),
         escapeHTML(email),
         escapeHTML(phone),
-        escapeHTML(address),
-        escapeHTML(localGovt),
-        escapeHTML(state),
-        escapeHTML(country),
         escapeHTML(purpose),
         escapeHTML(image),
         escapeHTML(role),
@@ -41,15 +35,11 @@ const addPartner = async (req, res) => {
         escapeHTML(userId)
     ];
 
-    const sql = `INSERT INTO volunteers(
+    const sql = `INSERT INTO partners(
         firstName,
         lastName,
         email,
         phone,
-        address,
-        localGovt,
-        state,
-        country,
         purpose,
         image,
         role,
@@ -66,14 +56,12 @@ const addPartner = async (req, res) => {
             ?,
             ?,
             ?,
-            ?,
-            ?,
-            ?,
             ?
             )`;
-
-    res.json(await transact(sql, esc))
-
+    let partnerResult = await transact(sql, esc);
+    if (partnerResult.affectedRows === 1 && partnerResult.insertId) {
+        await addPartnerLocation(req, res, partnerResult.insertId);
+    }
 }
 
 module.exports = {

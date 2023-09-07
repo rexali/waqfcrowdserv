@@ -1,13 +1,14 @@
-const { read } = require("../dbase/read");
+const { transact } = require("../dbase/transact");
 /**
  * Read message
  * @param {object} req - user request
  * @param {object} res - response to user request
  */
-const getMessages = (req, res) => {
-    const sql = "SELECT * FROM messages";
+const getMessages = async (req, res) => {
+    const sql = `select messages.messageId, messages.firstName, messages.lastName, messages.userId, messages.subject, messages.message, 
+    users.email from messages join users on users.userId = messages.userId`;
     const esc = [];
-    read(sql, esc, res);
+    res.json(await transact (sql, esc));
 }
 
 module.exports = {

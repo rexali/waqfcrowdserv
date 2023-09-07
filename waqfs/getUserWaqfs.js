@@ -12,8 +12,7 @@ const getUserWaqfs = async (req, res) => {
     const esc = [];
 
     const waqfSQL = `select waqfs.waqfId, waqfs.name, waqfs.problem, waqfs.goal,waqfs.purpose, 
-    waqfs.description,waqfs.target, waqfs.collectedAmount, waqfs.expectedAmount,waqfs.planPDF, 
-    waqfs.rating, waqfs.image,waqfs.isDonationAllowed, waqfs.status, waqfs.createdAt, waqfs.endAt, 
+    waqfs.description,waqfs.target, waqfs.type, waqfs.collectedAmount, waqfs.expectedAmount,waqfs.planPDF, waqfs.image,waqfs.isDonationAllowed, waqfs.status, waqfs.createdAt, waqfs.endAt, 
     locations.address, locations.localGovt, locations.state,locations.country from waqfs join 
     locations on waqfs.waqfId = locations.waqfId where locations.userId = ?`;
     const commentSQL = 'select * from comments';

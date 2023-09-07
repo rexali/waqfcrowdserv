@@ -1,4 +1,5 @@
 const { transact } = require("../dbase/transact");
+const { addBeneficiaryLocation } = require("../locations/addBeneficiaryLocation");
 const { escapeHTML } = require("../utils/escapeHTML");
 /** 
  * Add a new beneficiary
@@ -19,14 +20,7 @@ const addBeneficiary = async (req, res) => {
         image,
         dateOfBirth,
         occupation,
-        streetaddress,
-        localGovt,
-        state,
-        country,
-        education,
-        userId,
-        waqfId,
-        projectId
+        userId
     } = req.body;
 
     const esc = [
@@ -36,19 +30,12 @@ const addBeneficiary = async (req, res) => {
         escapeHTML(phone),
         escapeHTML(amount),
         escapeHTML(purpose),
-        escapeHTML(age),
+        escapeHTML(age), 
         escapeHTML(gender),
         escapeHTML(image),
-        escapeHTML(dateOfBirth),
+        escapeHTML(dateOfBirth), 
         escapeHTML(occupation),
-        escapeHTML(streetaddress),
-        escapeHTML(localGovt),
-        escapeHTML(state),
-        escapeHTML(country),
-        escapeHTML(education),
         escapeHTML(userId),
-        escapeHTML(waqfId),
-        escapeHTML(projectId)
     ];
 
     const sql = `INSERT INTO beneficiaries(
@@ -60,25 +47,11 @@ const addBeneficiary = async (req, res) => {
         purpose,
         age,
         gender,
-        image,
+        image, 
         dateOfBirth,
         occupation,
-        streetaddress,
-        localGovt,
-        state,
-        country,
-        education,
-        userId,
-        waqfId,
-        projectId
+        userId
         )VALUES(
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
             ?,
             ?,
             ?,
@@ -93,8 +66,10 @@ const addBeneficiary = async (req, res) => {
             ?
             )`;
 
-    res.json(await transact(sql, esc))
-
+    let beneficiaryResult = await transact(sql, esc);
+    if (beneficiaryResult.affectedRows === 1 && beneficiaryResult.insertId) {
+        await addBeneficiaryLocation(req, res, beneficiaryResult.insertId);
+    }
 }
 
 module.exports = {

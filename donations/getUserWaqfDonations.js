@@ -6,8 +6,8 @@ const { transact } = require("../dbase/transact");
  */
 const getUserWaqfDonations = async (req, res) => {
     const {id} = req.params
-    const sql = `select waqfs.name, waqfs.status, waqfs.createdAt, donations.category, donations.amount, 
-    donations.donationId from waqfs join donations on waqfs.waqfid = donations.waqfId where donations.userId=?`;
+    const sql = `select waqfs.waqfId, waqfs.name, waqfs.status, waqfs.createdAt, donations.category, donations.amount, 
+    donations.donationId, users.email from waqfs join donations on waqfs.waqfid = donations.waqfId join users on users.userId = donations.userId where donations.userId=?`;
     const esc = [id];
     res.json(await transact(sql, esc));
 }

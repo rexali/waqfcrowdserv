@@ -14,7 +14,7 @@ const searchWaqf = async (req, res) => {
     // const sql = "select * from waqfs where name LIKE '%" + newTerm + "%'";
     // const esc =[];
     // res.json(await transact(sql,esc));
-    const waqfSQL = "select waqfs.waqfId, waqfs.name, waqfs.problem, waqfs.goal,waqfs.purpose, waqfs.description,waqfs.target, waqfs.collectedAmount, waqfs.expectedAmount,waqfs.planPDF, waqfs.rating, waqfs.image,waqfs.isDonationAllowed, waqfs.status, waqfs.createdAt, waqfs.endAt, locations.address, locations.localGovt, locations.state,locations.country from waqfs join locations on waqfs.waqfId = locations.waqfId where waqfs.name LIKE '%" + newTerm + "%'";
+    const waqfSQL = "select waqfs.waqfId, waqfs.name, waqfs.problem, waqfs.goal,waqfs.purpose, waqfs.description,waqfs.target, waqfs.collectedAmount, waqfs.expectedAmount,waqfs.planPDF, waqfs.image,waqfs.isDonationAllowed, waqfs.status, waqfs.createdAt, waqfs.endAt, locations.address, locations.localGovt, locations.state,locations.country from waqfs join locations on waqfs.waqfId = locations.waqfId where waqfs.name LIKE '%" + newTerm + "%'";
 
     const commentSQL = 'select * from comments';
     const shareSQL = 'select * from shares';

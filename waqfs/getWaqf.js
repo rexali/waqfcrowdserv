@@ -1,6 +1,6 @@
-const { transact } = require("../dbase/transact");
-/**
- * GEt a waqf
+const { transact } = require("../dbase/transact"); 
+/**  
+ * Get a waqf
  * @param {object} req - user request
  * @param {object} res - response to user request
  */
@@ -13,4 +13,4 @@ const getWaqf = async(req, res) => {
 
 module.exports = {
     getWaqf
-}
+} 

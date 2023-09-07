@@ -1,5 +1,5 @@
 const { connectDb } = require("../dbase/connectDb");
-const jsonwebtoken = require("jsonwebtoken");
+const jsonwebtoken = require("jsonwebtoken"); 
 /**
  * Get the user authentication token
  * @param {String} sql - a string of sql
@@ -16,7 +16,7 @@ function getUserToken(sql, esc) {
       const token = jsonwebtoken.sign(
         { result },
         jwtSecret,
-        { noTimestamp: true, expiresIn: '1h' }
+        { noTimestamp: true, expiresIn: '24h' }
       );
       resolve({token,userId,email})
     });
@@ -25,5 +25,5 @@ function getUserToken(sql, esc) {
 }
 
 module.exports = {
-  getUserToken
+  getUserToken 
 }

@@ -5,26 +5,17 @@ const updateNotification = async (req, res) => {
     const {
         subject,
         body,
-        createdAt,
-        updatedAt,
-        userId,
+        notificationId,
     } = req.body;
 
-    const sql = `update projects 
-    set subject = ?,
-    set body = ?,
-    set createdAt = ?, 
-    set updatedAt = ?, 
-    set userId = ?
-    ) where projectId =?`
+    const sql = `update notifications set subject = ?, body = ? where notificationId = ?`
 
     const esc = [
         escapeHTML(subject),
         escapeHTML(body),
-        escapeHTML(createdAt),
-        escapeHTML(updatedAt),
-        escapeHTML(userId),
+        escapeHTML(notificationId),
     ];
+    
     res.json(await transact(sql, esc));;
 };
 

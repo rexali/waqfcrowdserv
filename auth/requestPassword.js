@@ -1,4 +1,4 @@
-const { changeHTMLMSQ } = require("../messages/changeHTMLMSQ");
+const { changeHTMLMSQ } = require("../utils/changeHTMLMSQ");
 const { escapeHTML } = require("../utils/escapeHTML");
 const { isUserCodeUpdated } = require("./isUserCodeUpdated");
 const { isUserEmail } = require("./isUserEmail");

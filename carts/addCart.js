@@ -1,8 +1,7 @@
-const { json } = require("express");
 const { transact } = require("../dbase/transact");
 const { escapeHTML } = require("../utils/escapeHTML");
 /**
- * Add new reply
+ * Add a new cart item
  * @param {object} req - user request
  * @param {object} res - response to user request
  */
@@ -21,10 +20,11 @@ const addCart = async (req, res) => {
         escapeHTML(category),
         escapeHTML(userId),
         escapeHTML(waqfId),
-        escapeHTML(quantity)
+        escapeHTML(quantity) 
     ];
 
     const checkSQL = `select * from carts where userId=? and waqfId =? and price=?`;
+
     const check_esc = [
         escapeHTML(userId),
         escapeHTML(waqfId),
@@ -59,7 +59,6 @@ const addCart = async (req, res) => {
 
         res.json(await transact(sql, esc))
     }
-
 }
 
 module.exports = {

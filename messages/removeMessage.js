@@ -1,16 +1,16 @@
-const { remove } = require("../dbase/remove");
+const { transact } = require("../dbase/transact");
 /**
  * Remove message
  * @param {object} req - user request
  * @param {object} res - response to user request
  */
-const removeMessage = (req, res) => {
-    let message_id = req.params.id;
-    let esc = [
-        message_id
+const removeMessage = async (req, res) => {
+    const {messageId} = req.body;
+    const esc = [
+        messageId
     ]
-    let sql = "DELETE FROM messages WHERE message_id=?";
-    remove(sql, esc, res);
+    const  sql = "DELETE FROM messages WHERE messageId=?";
+    res.json(await transact(sql, esc));
 }
 module.exports = {
     removeMessage

@@ -6,7 +6,7 @@ const { transact } = require("../dbase/transact");
  */
 const getUserZakatDonations = async (req, res) => {
     const { id, category } = req.params
-    const sql = `select * from donations where donations.userId=? and donations.category=?;`;
+    const sql = `select donations.category, donations.amount, donations.donationId, users.email from donations join users on users.userId = donations.userId where donations.userId=? and donations.category=?;`;
     const esc = [id, category];
     res.json(await transact(sql, esc));
 }

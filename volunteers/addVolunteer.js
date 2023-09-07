@@ -1,4 +1,5 @@
 const { transact } = require("../dbase/transact");
+const { addVolunteerLocation } = require("../locations/addVolunteerLocation");
 const { escapeHTML } = require("../utils/escapeHTML");
 /** 
  * Add a new volunteer
@@ -12,10 +13,6 @@ const addVolunteers = async (req, res) => {
         lastName,
         email, 
         phone, 
-        address, 
-        localGovt, 
-        state, 
-        country, 
         education, 
         purpose, 
         age, 
@@ -30,10 +27,6 @@ const addVolunteers = async (req, res) => {
         escapeHTML(lastName),
         escapeHTML(email), 
         escapeHTML(phone), 
-        escapeHTML(address), 
-        escapeHTML(localGovt), 
-        escapeHTML(state), 
-        escapeHTML(country), 
         escapeHTML(education), 
         escapeHTML(purpose), 
         escapeHTML(age), 
@@ -48,10 +41,6 @@ const addVolunteers = async (req, res) => {
         lastName,
         email, 
         phone, 
-        address, 
-        localGovt, 
-        state, 
-        country, 
         education, 
         purpose, 
         age, 
@@ -70,15 +59,15 @@ const addVolunteers = async (req, res) => {
             ?,
             ?,
             ?,
-            ?,
-            ?,
-            ?,
-            ?,
             ?
             )`;
-            
-    res.json(await transact(sql, esc))
 
+            
+    let volunteerResult = await transact(sql, esc);
+    if (volunteerResult.affectedRows === 1 && volunteerResult.insertId) {
+        await addVolunteerLocation(req, res, volunteerResult.insertId);
+    }
+            
 }
 
 module.exports = {

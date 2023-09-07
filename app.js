@@ -1,49 +1,52 @@
 const express = require("express");
-const cookieParser = require("cookie-parser"); 
+const cookieParser = require("cookie-parser");   
 const cors = require("cors");
+// var multer = require('multer');
+// var upload = multer();
 const jsonwebtoken = require("jsonwebtoken");
 const { expressjwt } = require("express-jwt");
 const dotenv = require('dotenv');
 dotenv.config();
 // const csrf = require('csurf');
 // const expressFormidable = require("express-formidable");
-
 const { profileRouter } = require('./routes/profileRoutes');
-const { projectRouter } = require('./routes/projectRoutes');
 const { commentRouter } = require("./routes/commentRoutes");
 const { replyRouter } = require("./routes/replyRoutes");
-const { authRouter } = require("./routes/authRoutes");
+const { authRouter } = require("./routes/authRoutes"); 
 const { logHandler } = require("./utils/logHandler");
 const { errorHandler } = require("./utils/errorHandler");
 const { donationRouter } = require("./routes/donationRoutes");
 const { notificationRouter } = require("./routes/notificationRoutes");
-const { causeRouter } = require("./routes/causeRoutes");
 const { waqfRouter } = require("./routes/waqfRoutes");
 const { cartRouter } = require("./routes/cartRoutes");
 const { shareRouter } = require("./routes/shareRoutes");
 const { likeRouter } = require("./routes/likeRoutes");
 const { fileRouter } = require("./routes/fileRoutes");
-const { volunteerRouter } = require("./routes/volunteerRoutes");
+const { volunteerRouter } = require("./routes/volunteerRoutes"); 
 const { beneficiaryRouter } = require("./routes/beneficiaryRoutes");
 const { partnerRouter } = require("./routes/partnerRoutes");
 const { searchRouter } = require("./routes/searchRoutes");
-const { transact } = require("./dbase/transact");
+const { transact } = require("./dbase/transact"); 
+const { ratingRouter } = require("./routes/ratingRoutes");
+const { messageRouter } = require("./routes/messageRoutes");
+const { postRouter } = require("./routes/postRoutes"); 
+const { helpRouter } = require("./routes/helpRoutes");
+const { updateRouter } = require("./routes/updateRoutes");
 
 const app = express();
 
 const PORT = 3000;
-
-const HOST = "192.168.24.35"; 
-
+// const HOST = "127.0.0.1";
+const HOST = "192.168.1.100";
 // for parsing application/json
 app.use(express.json());
 // for parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 // parse cookies
-app.use(cookieParser()); 
+app.use(cookieParser());
 
 // apply cors option
-// const corsOption = {
+// const corsOption = { 
 //      origin: ["http://191.168.70.35:3000", "http://192.168.1.107"],
 //      // origin: '*',
 //      credentials: true,
@@ -52,7 +55,7 @@ app.use(cookieParser());
 //      optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204 
 // }
 
-// apply default cors to the server
+// apply default cors to the server 
 // app.use(cors());
 // set view engine
 app.set('view engine', 'ejs');
@@ -63,38 +66,37 @@ app.use(errorHandler);
 //log req info
 app.use(logHandler);
 
+// for parsing multipart/form-data
+// app.use(upload.array()); 
+
 // handle file with formidable
 // app.use(expressFormidable());
 
 // cross site request forgery protection
-// const csrfProtection = csrf({cookie:true});
-// app.use(csrfProtection);
+// app.use(csrf({ cookie: true }));
 
 // use this public files
 app.use(express.static('public'));
 
-// getToken: req => {
-     //      if (req.headers["user-agent"] === null || undefined) {
-     //           return req.headers.authorization;
-     //      } else {
-     //           return req.headers.cookie.token;
-     //      }
-     // },
-
+const getToken = (req) => {
+     if (req.headers["user-agent"] === null || undefined) {
+          return req.headers.authorization;
+     } else {
+          return req.headers.cookie.token;
+     }
+}; 
+ 
 // verify jwt
 app.use(expressjwt({
      secret: process.env.SECRET_KEY,
-     getToken: req => req.headers.authorization,
+     getToken: req => req.headers.authorization, //getToken()
      algorithms: ['HS256']
 }).unless({
-     path: [ 
+     path: [
           '/',
           // '/public/index.html',
           // '/initializedb',
-          // '/csrf-token',
-          '/rex',
-          '/favicon.ico',
-          '/waqfs/1/favourites',
+          '/csrf-token',
           '/jwt',
      ]
 })
@@ -102,8 +104,6 @@ app.use(expressjwt({
 
 // the routers
 app.use("/profiles", profileRouter);
-app.use("/projects", projectRouter);
-app.use("/causes", causeRouter);
 app.use("/waqfs", waqfRouter);
 app.use("/comments", commentRouter);
 app.use("/replies", replyRouter);
@@ -119,6 +119,11 @@ app.use("/volunteers", volunteerRouter);
 app.use("/beneficiaries", beneficiaryRouter);
 app.use("/partners", partnerRouter);
 app.use("/searchs", searchRouter);
+app.use("/ratings", ratingRouter);
+app.use("/messages", messageRouter);
+app.use("/posts", postRouter);
+app.use("/helps", helpRouter);
+app.use("/updates", updateRouter);
 
 // get web token
 app.get("/jwt", (req, res) => {
@@ -126,12 +131,10 @@ app.get("/jwt", (req, res) => {
      res.cookie('token', token, { httpOnly: true });
      res.json({ jwtoken: token })
 });
-
 //  get csrf-token from request
-// app.get("/csrf-token", (req, res) => {
+// app.get("/csrft", (req, res) => {
 //      res.json({ csrfToken: req.csrfToken() })
 //  });
-// app.get("/rex",async (req,res)=>res.json({affectedRows:0}));
 // server home
 app.get("/", (req, res) => res.render("home", {}));
 // render 404 page

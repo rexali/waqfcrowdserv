@@ -11,6 +11,6 @@ const getDonation = async (req, res) => {
     res.json(await transact(sql, esc));
 }
 
-module.exports = {
+module.exports = { 
     getDonation,
 }
