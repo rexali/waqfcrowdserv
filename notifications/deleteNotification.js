@@ -5,10 +5,15 @@ const { transact } = require("../dbase/transact");
  * @param {object} res - response to user request
  */
 const deleteNotification = async(req, res) => {
-    const {notificationId}= req.body;
-    const sql = "delete from notifications where notificationId = ?";
-    const esc = [notificationId];
-    res.json(await transact(sql, esc));
+    try {
+        const {notificationId}= req.body;
+        const sql = "delete from notifications where notificationId = ?";
+        const esc = [notificationId];
+        res.json(await transact(sql, esc)); 
+    } catch (error) {
+        console.warn(error);
+    }
+    
 }
 
 module.exports = {

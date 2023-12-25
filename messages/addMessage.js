@@ -7,34 +7,39 @@ const { escapeHTML } = require("../utils/escapeHTML");
  */
 const addMessage = async (req, res) => {
  
-    const {
-        firstName,
-        lastName,
-        subject,
-        email,
-        message,
-        from,
-        userId
-    } = req.body;
+    try {
+        const {
+            firstName,
+            lastName, 
+            subject,
+            email,
+            message,
+            from,
+            userId
+        } = req.body;
+        
+     const newFirstName = escapeHTML(firstName);
+     const newLastName = escapeHTML(lastName);
+     const newSubject = escapeHTML(subject);
+     const newEmail = escapeHTML(email);
+     const newMessage = escapeHTML(message);
+     
+        const esc = [
+            newFirstName,
+            newLastName,
+            newSubject,
+            newEmail,
+            newMessage,
+            userId
+        ];
     
- const newFirstName = escapeHTML(firstName);
- const newLastName = escapeHTML(lastName);
- const newSubject = escapeHTML(subject);
- const newEmail = escapeHTML(email);
- const newMessage = escapeHTML(message);
- 
-    const esc = [
-        newFirstName,
-        newLastName,
-        newSubject,
-        newEmail,
-        newMessage,
-        userId
-    ];
-
-    const sql = `INSERT INTO messages (firstName, lastName, subject, email, message, userId) VALUES(?,?,?,?,?,?)`;
-
-    res.json(await transact(sql, esc));
+        const sql = `INSERT INTO messages (firstName, lastName, subject, email, message, userId) VALUES(?,?,?,?,?,?)`;
+    
+        res.json(await transact(sql, esc));
+    } catch (error) {
+        console.warn(error);
+    }
+    
 }
 
 module.exports = {

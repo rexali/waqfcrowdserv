@@ -19,7 +19,12 @@ function hashpass(userPassword) {
  * @returns a bolean value
  */
 function checkpass(DBpassword, userPassword) {
-    return bcrypt.compareSync(userPassword, DBpassword); // return boolean
+    try { 
+        return bcrypt.compareSync(userPassword, DBpassword); // return boolean
+    } catch (error) {
+       console.warn(error); 
+    }
+    
 }
 
 module.exports = { hashpass, checkpass};

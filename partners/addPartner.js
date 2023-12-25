@@ -9,59 +9,64 @@ const { escapeHTML } = require("../utils/escapeHTML");
  */
 const addPartner = async (req, res) => {
 
-    const {
-        firstName,
-        lastName,
-        email,
-        phone,
-        purpose,
-        image,
-        role,
-        organisation,
-        dateOfInception,
-        userId
-    } = req.body;
-
-    const esc = [
-        escapeHTML(firstName),
-        escapeHTML(lastName),
-        escapeHTML(email),
-        escapeHTML(phone),
-        escapeHTML(purpose),
-        escapeHTML(image),
-        escapeHTML(role),
-        escapeHTML(organisation),
-        escapeHTML(dateOfInception),
-        escapeHTML(userId)
-    ];
-
-    const sql = `INSERT INTO partners(
-        firstName,
-        lastName,
-        email,
-        phone,
-        purpose,
-        image,
-        role,
-        organisation,
-        dateOfInception,
-        userId
-        )VALUES(
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?
-            )`;
-    let partnerResult = await transact(sql, esc);
-    if (partnerResult.affectedRows === 1 && partnerResult.insertId) {
-        await addPartnerLocation(req, res, partnerResult.insertId);
+    try {
+        const {
+            firstName,
+            lastName,
+            email,
+            phone,
+            purpose,
+            image,
+            role,
+            organisation,
+            dateOfInception,
+            userId
+        } = req.body;
+    
+        const esc = [
+            escapeHTML(firstName),
+            escapeHTML(lastName),
+            escapeHTML(email),
+            escapeHTML(phone),
+            escapeHTML(purpose),
+            escapeHTML(image),
+            escapeHTML(role),
+            escapeHTML(organisation),
+            escapeHTML(dateOfInception),
+            escapeHTML(userId)
+        ];
+    
+        const sql = `INSERT INTO partners(
+            firstName,
+            lastName,
+            email,
+            phone,
+            purpose,
+            image,
+            role,
+            organisation,
+            dateOfInception,
+            userId
+            )VALUES(
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?
+                )`;
+        let partnerResult = await transact(sql, esc);
+        if (partnerResult.affectedRows === 1 && partnerResult.insertId) {
+            await addPartnerLocation(req, res, partnerResult.insertId);
+        }
+    } catch (error) {
+        console.warn(error);
     }
+    
 }
 
 module.exports = {

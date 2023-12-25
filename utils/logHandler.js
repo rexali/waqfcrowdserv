@@ -1,19 +1,29 @@
 function logHandler(req, res, next) {
-    const method = req.method; 
-    const url = req.originalUrl;
-    req.timeReceived = Date();
-    console.log(`${method}: ${url} --- ${req.timeReceived}`);
-    next();
+    try {
+        const method = req.method;
+        const url = req.originalUrl;
+        req.timeReceived = Date();
+        console.log(`${method}: ${url} --- ${req.timeReceived}`);
+        next();
+    } catch (error) {
+        console.warn(error);
+    }
+
 }
 
 
 function logHandler2(req, res, next) {
-    req.timeReceived = Date();
-    console.log(req.url + ' --- ' + req.timeReceived);
-    next();
+    try {
+        req.timeReceived = Date();
+        console.log(req.url + ' --- ' + req.timeReceived);
+        next();
+    } catch (error) {
+        console.warn(error);
+    }
+
 }
 
-module.exports={
-logHandler,
-logHandler2
+module.exports = {
+    logHandler,
+    logHandler2
 }

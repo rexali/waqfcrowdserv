@@ -6,38 +6,41 @@ const { escapeHTML } = require("../utils/escapeHTML");
  * @param {object} res - response to user request
  */
 const addComment = async (req, res) => {
+    try {
+        const {
+            body,
+            category,
+            userId,
+            waqfId,
+        } = req.body;
 
-    const {
-        body,
-        category,
-        userId,
-        waqfId,
-    } = req.body;
+        const nBody = escapeHTML(body);
+        const nCategory = escapeHTML(category);
+        const nUserId = escapeHTML(userId);
+        const nWaqfId = escapeHTML(waqfId);
 
-    const nBody = escapeHTML(body);
-    const nCategory =escapeHTML(category);
-    const nUserId=escapeHTML(userId);
-    const nWaqfId = escapeHTML(waqfId);
+        const esc = [
+            nBody,
+            nCategory,
+            nUserId,
+            nWaqfId
+        ];
 
-    const esc = [
-        nBody,
-        nCategory,
-        nUserId,
-        nWaqfId  
-    ];
-
-    let sql = `INSERT INTO comments(
-        body,
-        category,
-        userId,
-        waqfId
-        )VALUES(
-            ?,
-            ?,
-            ?,
-            ?
-            )`;
-    res.json(await transact(sql, esc))
+        let sql = `INSERT INTO comments(
+            body,
+            category,
+            userId,
+            waqfId
+            )VALUES(
+                ?,
+                ?,
+                ?,
+                ?
+                )`;
+        res.json(await transact(sql, esc))
+    } catch (error) {
+        console.warn(error);
+    }
 }
 
 module.exports = {

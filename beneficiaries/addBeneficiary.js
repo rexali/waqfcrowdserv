@@ -8,37 +8,39 @@ const { escapeHTML } = require("../utils/escapeHTML");
  */
 const addBeneficiary = async (req, res) => {
 
-    const {
-        firstName,
-        lastName,
-        email,
-        phone,
-        amount,
-        purpose,
-        age,
-        gender,
-        image,
-        dateOfBirth,
-        occupation,
-        userId
-    } = req.body;
-
-    const esc = [
-        escapeHTML(firstName),
-        escapeHTML(lastName),
-        escapeHTML(email),
-        escapeHTML(phone),
-        escapeHTML(amount),
-        escapeHTML(purpose),
-        escapeHTML(age), 
-        escapeHTML(gender),
-        escapeHTML(image),
-        escapeHTML(dateOfBirth), 
-        escapeHTML(occupation),
-        escapeHTML(userId),
-    ];
-
-    const sql = `INSERT INTO beneficiaries(
+    try {
+        // get benficiary data
+        const {
+            firstName,
+            lastName,
+            email,
+            phone,
+            amount,
+            purpose,
+            age,
+            gender,
+            image,
+            dateOfBirth,
+            occupation,
+            userId
+        } = req.body;
+        //  escape the data
+        const esc = [
+            escapeHTML(firstName),
+            escapeHTML(lastName),
+            escapeHTML(email),
+            escapeHTML(phone),
+            escapeHTML(amount),
+            escapeHTML(purpose),
+            escapeHTML(age),
+            escapeHTML(gender),
+            escapeHTML(image),
+            escapeHTML(dateOfBirth),
+            escapeHTML(occupation),
+            escapeHTML(userId),
+        ];
+        // prepare sql
+        const sql = `INSERT INTO beneficiaries(
         firstName,
         lastName,
         email,
@@ -65,11 +67,17 @@ const addBeneficiary = async (req, res) => {
             ?,
             ?
             )`;
-
-    let beneficiaryResult = await transact(sql, esc);
-    if (beneficiaryResult.affectedRows === 1 && beneficiaryResult.insertId) {
-        await addBeneficiaryLocation(req, res, beneficiaryResult.insertId);
+        // insert data
+        let beneficiaryResult = await transact(sql, esc);
+        // check if it is a success
+        if (beneficiaryResult.affectedRows === 1 && beneficiaryResult.insertId) {
+            // add beneficiary location data
+            await addBeneficiaryLocation(req, res, beneficiaryResult.insertId);
+        }
+    } catch (error) {
+        console.log(error)
     }
+
 }
 
 module.exports = {

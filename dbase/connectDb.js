@@ -12,20 +12,24 @@ dotenv.config();
  * @returns conn object
  */
 function connectDb() {
+    try {
+        const conn = mysql.createConnection({
+            host: process.env.DB_POST, //"3306",
+            user: process.env.DB_USER, //"root",
+            password: process.env.DB_PASS, //"rexali",
+            database: process.env.DB_NAME, // "waqfcrowd",
+        });
     
-    const conn = mysql.createConnection({
-        host: process.env.DB_POST, //"3306",
-        user: process.env.DB_USER, //"root",
-        password: process.env.DB_PASS, //"rexali",
-        database: process.env.DB_NAME, // "waqfcrowd",
-    });
-
-    conn.connect(function (err) {
-        if (err) throw err;
-        console.log("Connected!");
-    });
-
-    return conn;
+        conn.connect(function (err) {
+            if (err) throw err;
+            console.log("Connected!");
+        });
+    
+        return conn;
+    } catch (error) {
+        console.warn(error);
+    }
+  
 }
 
 module.exports = {

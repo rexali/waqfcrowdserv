@@ -7,21 +7,26 @@ const { escapeHTML } = require("../utils/escapeHTML");
  */
 const updateRating = async (req, res) => {
 
-    const {
-        userId,
-        waqfId,
-        rating
-    } = req.body;
-
-    const esc = [
-        escapeHTML(rating),
-        escapeHTML(userId),
-        escapeHTML(waqfId),
-    ];
-
-    const updateSQL = `update ratings set rating = ? where userId=? and waqfId=?`;
-
-    res.json(await transact(updateSQL, esc));
+    try {
+        const {
+            userId,
+            waqfId,
+            rating
+        } = req.body;
+    
+        const esc = [
+            escapeHTML(rating),
+            escapeHTML(userId),
+            escapeHTML(waqfId),
+        ];
+    
+        const updateSQL = `update ratings set rating = ? where userId=? and waqfId=?`;
+    
+        res.json(await transact(updateSQL, esc));
+    } catch (error) {
+        console.warn(error);
+    }
+    
 }
 
 module.exports = {

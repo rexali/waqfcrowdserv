@@ -4,10 +4,15 @@ const { transact } = require("../dbase/transact");
  * @param {object} req - user request
  * @param {object} res - response to user request
  */
-const getVolunteers = async (req, res)=>{
-    const sql = `select * from volunteers`;
-    const esc = [];
-    res.json(await transact(sql,esc));  
+const getVolunteers = async (req, res) => {
+    try {
+        const sql = `select * from volunteers`;
+        const esc = [];
+        res.json(await transact(sql, esc));
+    } catch (error) {
+        console.warn(error);
+    }
+
 }
 
 module.exports = {

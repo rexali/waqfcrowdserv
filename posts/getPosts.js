@@ -10,7 +10,6 @@ async function getPosts(req, res) {
 
         res.json(data);
     } catch (error) {
-        
         console.warn(error);
     }
 }

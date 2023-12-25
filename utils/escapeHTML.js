@@ -5,7 +5,13 @@ const { escape, unescape } = require("html-escaper");
  * @returns a string
  */
 function escapeHTML(value) {
-    return escape(value);
+    try {
+      
+        return escape(value);
+    } catch (error) {
+        
+    }
+   
 }
 
 /**
@@ -14,8 +20,13 @@ function escapeHTML(value) {
  * @returns a string
  */
 function unscapeHTML(value) {
-    return unescape(value)
-}
+    try {
+
+        return unescape(value)
+    } catch (error) {
+       console.warn(error); 
+    }
+}  
 
 module.exports={
    escapeHTML,

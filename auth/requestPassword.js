@@ -8,38 +8,58 @@ const { isUserEmail } = require("./isUserEmail");
  * @param {object} req - user request
  * @param {object} res - response to user request
  */
-const requestPassword = async (req, res) => {
 
-    const {
-        email
-    } = req.body;
-
-    const esc = [
-        email
-    ];
-
-    const newEmail = escapeHTML(email);
-    const rCode = uuidv4();
-
-    let sql = "SELECT email FROM users WHERE email =?";
-    let result = await isUserEmail(sql, esc)
-    if (result) {
-        const sql = `UPDATE users SET rCode = ? WHERE email= ? `;
-        let codeResult = await isUserCodeUpdated(sql, [rCode, newEmail])
-        if (codeResult) {
-            const html = changeHTMLMSQ(newEmail, rCode)
-            let mailResult = true; //await mailHelpers.sendMail(email, 'Request password', 'html', html, '')
-            if (mailResult) {
-                res.json({ result: true });
+const mutex = Promise.resolve();
+const requestPassword = (req, res) => {
+    mutex.then(async () => {
+        
+        const {
+            email
+        } = req.body;
+    
+        const esc = [
+            email
+        ];
+    
+        try {
+            // escape the email
+            const newEmail = escapeHTML(email);
+            // genrate random code
+            const rCode = uuidv4();
+            // prepare sql to get email
+            let sql = "SELECT email FROM users WHERE email =?";
+            // check the email exist
+            let result = await isUserEmail(sql, esc)
+            // if exist prepare the sql to upadte the rCode
+            if (result) {
+                // sql to upadte the rCode
+                const sql = `UPDATE users SET rCode = ? WHERE email= ? `;
+                // update the user rCode
+                let codeResult = await isUserCodeUpdated(sql, [rCode, newEmail]);
+                if (codeResult) {
+                    const html = changeHTMLMSQ(newEmail, rCode)
+                    let mailResult = true; //await mailHelpers.sendMail(email, 'Request password', 'html', html, '')
+                    if (mailResult) {
+    
+                        res.json({ result: true });
+                    } else {
+    
+                        res.json({ result: false });
+                    }
+                } else {
+                    console.warn('random code update error');
+                }
             } else {
-                res.json({ result: false });
+                console.warn('no email')
             }
-        } else {
-            console.log('random code update error');
+        } catch (error) {
+            console.warn(error);
         }
-    } else {
-        console.log('no email')
-    }
+    }).catch((error)=>{
+     console.warn(error);
+    });
+
+    return mutex;
 }
 
 module.exports = {

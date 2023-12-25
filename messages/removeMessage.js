@@ -5,12 +5,17 @@ const { transact } = require("../dbase/transact");
  * @param {object} res - response to user request
  */
 const removeMessage = async (req, res) => {
-    const {messageId} = req.body;
-    const esc = [
-        messageId
-    ]
-    const  sql = "DELETE FROM messages WHERE messageId=?";
-    res.json(await transact(sql, esc));
+    try {
+        const {messageId} = req.body;
+        const esc = [
+            messageId
+        ]
+        const  sql = "DELETE FROM messages WHERE messageId=?";
+        res.json(await transact(sql, esc));
+    } catch (error) {
+        console.warn(error);
+    }
+
 }
 module.exports = {
     removeMessage

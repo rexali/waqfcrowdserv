@@ -1,29 +1,83 @@
 const { getUserPassword } = require("./getUserPassword");
-const { getUserToken } = require("./getUserToken"); 
+const { getUserToken } = require("./getUserToken");
 const { checkpass } = require("../utils/hashHelper");
 const { escapeHTML } = require("../utils/escapeHTML");
+const { Mutex } = require("async-mutex");
 
+// create mutex instance
+const mutex = new Mutex();
 /**
  * Login user
- * @param {object} req - user request
+ * @param {object} req - user request 
  * @param {object} res - response to user request
  */
 const loginUser = async (req, res) => {
-    const { email, password } = req.body;
-    const newPassword = escapeHTML(password);
-    const newEmail = escapeHTML(email)
-    const esc = [newEmail]
-    const sql = `SELECT password FROM users WHERE email = ?`;
-    const DbPassword = await getUserPassword(sql, esc);
-    if (checkpass(DbPassword, newPassword)) {
-        const sql = `SELECT userId, email FROM users WHERE email = ?`;
-        const {token,userId,email} = await getUserToken(sql, esc);
-        res.cookie('token', token, { httpOnly: true });
-        res.json({ token:token, userId, email});
-    } else {
-        console.log('password mismatch');
-        res.json({ result: 'password mismatch' });
+    // acquire access to the path to do operation (for race condition)
+    const release = await mutex.acquire();
+    try {
+        // get email and password
+        const { email, password } = req.body;
+        //   check if email and password are not null
+        if (email & password) {
+
+            let error_response = {
+                error: 404,
+                message: "email or password missing"
+            };
+
+            res.json({
+                result:
+                    false,       
+                ...error_response
+            });
+        }
+        // make safe email and password by escaping html elements
+        const newPassword = escapeHTML(password);
+        const newEmail = escapeHTML(email);
+        // sql input data to be escape
+        const esc = [newEmail];
+        //  prepare sql
+        const sql = `SELECT password FROM users WHERE email = ?`;
+        // get store password
+        const DbPassword = await getUserPassword(sql, esc);
+        // check to see is not empty
+        if (!DbPassword) {
+
+            let error_response = {
+                error: 404,
+                message: "email or password missing"
+            };
+
+            res.json({ result: false, ...error_response });
+        }
+    //    verify the password with a given password 
+        if (checkpass(DbPassword, newPassword)) {  
+            const sql = `SELECT userId, email FROM users WHERE email = ?`;
+            const { token, userId, email } = await getUserToken(sql, esc);
+
+            res.cookie('token', token, { httpOnly: true, secure: false });
+
+            res.json({
+                result: true,
+                token,
+                userId,
+                email,
+            });
+
+        } else {
+
+            res.json({
+                result: 'password mismatch'
+            });
+        }
+
+    } catch (error) {
+        console.warn(error);
+    } finally {
+        // release path for other
+        release();
     }
+
 }
 
 module.exports = {

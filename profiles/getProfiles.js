@@ -5,10 +5,15 @@ const { transact } = require("../dbase/transact");
  * @param {object} res - response to user request
  */
 const getProfiles = async (req, res)=>{
-    const sql = `select * from users join profiles on users.userId=profiles.userId 
+    try {
+        const sql = `select * from users join profiles on users.userId=profiles.userId 
     join locations on profiles.userId=locations.userId`;
     const esc = [];
-    res.json(await transact(sql,esc));  
+    res.json(await transact(sql,esc)); 
+    } catch (error) {
+        console.warn(error);
+    }
+     
 }
 
 module.exports = {

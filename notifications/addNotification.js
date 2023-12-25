@@ -6,7 +6,7 @@ const { escapeHTML } = require("../utils/escapeHTML");
  * @param {object} res - response to user request
  */
 const addNotification = async (req, res) => {
-
+  try {
     const {
         subject,
         message,
@@ -30,6 +30,10 @@ const addNotification = async (req, res) => {
             )`;
 
     res.json(await transact(sql, esc))
+  } catch (error) {
+    console.warn(error);
+  }
+    
 
 }
 

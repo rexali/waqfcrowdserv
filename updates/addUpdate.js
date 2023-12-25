@@ -7,28 +7,34 @@ const { escapeHTML } = require("../utils/escapeHTML");
  */
 const addUpdate = async (req, res) => {
  
-    const {
-        title,
-        body,
-        userId,
-        waqfId
-    } = req.body;
+    try {
+        const {
+            title,
+            body,
+            userId,
+            waqfId
+        } = req.body;
+        
+     const ntitle= escapeHTML(title);
+     const nbody = escapeHTML(body);
+     const nuserId = escapeHTML(userId);
+     const nwaqfId = escapeHTML(waqfId);
+     
+        const esc = [
+            ntitle,
+            nbody,
+            nuserId,
+            nwaqfId
+        ];
     
- const ntitle= escapeHTML(title);
- const nbody = escapeHTML(body);
- const nuserId = escapeHTML(userId);
- const nwaqfId = escapeHTML(waqfId);
- 
-    const esc = [
-        ntitle,
-        nbody,
-        nuserId,
-        nwaqfId
-    ];
-
-    const sql = `INSERT INTO updates (title, body, userId, waqfId) VALUES(?,?,?,?)`;
-
-    res.json(await transact(sql, esc));
+        const sql = `INSERT INTO updates (title, body, userId, waqfId) VALUES(?,?,?,?)`;
+    
+        res.json(await transact(sql, esc));
+        
+    } catch (error) {
+        console.warn(error);
+    }
+    
 }
 
 module.exports = {

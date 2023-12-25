@@ -7,29 +7,34 @@ const { escapeHTML } = require("../utils/escapeHTML");
  */
 const addHelp = async (req, res) => {
 
-    const {
-        question,
-        answer,
-        userId
-    } = req.body;
-
-    const esc = [
-        escapeHTML(question),
-        escapeHTML(answer),
-        escapeHTML(userId),
-    ];
-
-        const sql = `INSERT INTO helps(
-            question, 
-            answer,  
+    try {
+        const {
+            question,
+            answer,
             userId
-            )VALUES(
-                ?,
-                ?, 
-                ?
-                )`;
-
-        res.json(await transact(sql, esc));
+        } = req.body;
+    
+        const esc = [
+            escapeHTML(question),
+            escapeHTML(answer),
+            escapeHTML(userId),
+        ];
+    
+            const sql = `INSERT INTO helps(
+                question, 
+                answer,  
+                userId
+                )VALUES(
+                    ?,
+                    ?, 
+                    ?
+                    )`;
+    
+            res.json(await transact(sql, esc));
+    } catch (error) {
+        console.warn(error);
+    }
+   
 }
 
 module.exports = {

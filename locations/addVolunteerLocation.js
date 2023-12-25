@@ -7,40 +7,45 @@ const { escapeHTML } = require("../utils/escapeHTML");
  */
 const addVolunteerLocation = async (req, res, insertId) => {
 
-    const {
-        address,
-        localGovt,
-        state,
-        country, 
-        userId
-    } = req.body;
-
-    const esc = [
-        escapeHTML(address),
-        escapeHTML(localGovt),
-        escapeHTML(state),
-        escapeHTML(country),
-        insertId,
-        escapeHTML(userId)
-    ];
-
-    const sql = `INSERT INTO locations(
-        address,
-        localGovt,
-        state,
-        country,
-        volunteerId,
-        userId
-        )VALUES(
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?
-            )`;
-
-    res.json(await transact(sql, esc))
+    try {
+        const {
+            address,
+            localGovt,
+            state,
+            country, 
+            userId
+        } = req.body;
+    
+        const esc = [
+            escapeHTML(address),
+            escapeHTML(localGovt),
+            escapeHTML(state),
+            escapeHTML(country),
+            insertId,
+            escapeHTML(userId)
+        ];
+    
+        const sql = `INSERT INTO locations(
+            address,
+            localGovt,
+            state,
+            country,
+            volunteerId,
+            userId
+            )VALUES(
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?
+                )`;
+    
+        res.json(await transact(sql, esc))
+    } catch (error) {
+        console.warn(error);
+    }
+    
 }
 
 module.exports = {

@@ -7,33 +7,38 @@ const { escapeHTML } = require("../utils/escapeHTML");
  */
 const updateMessage = async (req, res) => {
 
-    const {
-        firstName,
-        lastName,
-        subject,
-        email,
-        message,
-        messageId
-    } = req.body;
-
-    const newFirstName = escapeHTML(firstName);
-    const newLastName = escapeHTML(lastName);
-    const newSubject = escapeHTML(subject);
-    const newEmail = escapeHTML(email);
-    const newMessage = escapeHTML(message);
-
-    const esc = [
-        newFirstName,
-        newLastName,
-        newSubject,
-        newEmail,
-        newMessage,
-        messageId
-    ];
-
-    const sql = `update messages set firstName = ?, lastName = ?, subject=?, email = ?, message = ? where messageId = ?`;
-
-    res.json(await transact(sql, esc));
+    try {
+        const {
+            firstName,
+            lastName,
+            subject,
+            email,
+            message,
+            messageId
+        } = req.body;
+    
+        const newFirstName = escapeHTML(firstName);
+        const newLastName = escapeHTML(lastName);
+        const newSubject = escapeHTML(subject);
+        const newEmail = escapeHTML(email);
+        const newMessage = escapeHTML(message);
+    
+        const esc = [
+            newFirstName,
+            newLastName,
+            newSubject,
+            newEmail,
+            newMessage,
+            messageId
+        ];
+    
+        const sql = `update messages set firstName = ?, lastName = ?, subject=?, email = ?, message = ? where messageId = ?`;
+    
+        res.json(await transact(sql, esc));
+    } catch (error) {
+        console.warn(error);
+    }
+    
 }
 
 module.exports = {

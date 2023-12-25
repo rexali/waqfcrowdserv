@@ -7,27 +7,27 @@ const { removeLike } = require("./removeLike");
  * @param {object} res - response to user request
  */
 const addLike = async (req, res) => {
+    try {
+        const {
+            category,
+            userId,
+            waqfId
+        } = req.body;
 
-    const {
-        category,
-        userId,
-        waqfId
-    } = req.body;
+        const esc = [
+            escapeHTML(category),
+            escapeHTML(userId),
+            escapeHTML(waqfId)
+        ];
 
-    const esc = [
-        escapeHTML(category),
-        escapeHTML(userId),
-        escapeHTML(waqfId)
-    ];
+        const check_esc = [userId, waqfId];
 
-    const check_esc = [userId, waqfId];
+        const checkSQL = `select * from likes where userId=? and waqfId=?`;
 
-    const checkSQL = `select * from likes where userId=? and waqfId=?`;
+        const likes = await transact(checkSQL, check_esc);
 
-    const likes = await transact(checkSQL, check_esc);
-
-    if (likes.length === 0) {
-        const sql = `INSERT INTO likes(
+        if (likes.length === 0) {
+            const sql = `INSERT INTO likes(
             category, 
             userId,  
             waqfId
@@ -37,12 +37,16 @@ const addLike = async (req, res) => {
                 ?
                 )`;
 
-        res.json(await transact(sql, esc));
-    } else {
+            res.json(await transact(sql, esc));
+        } else {
 
-        await removeLike(req, res);
+            await removeLike(req, res);
 
+        }
+    } catch (error) {
+        console.warn(error);
     }
+
 
 }
 

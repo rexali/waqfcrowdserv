@@ -7,26 +7,31 @@ const { escapeHTML } = require("../utils/escapeHTML");
  */
 const updateWaqfLocation = async (fields, res, insertId) => {
 
-    const {
-        address,
-        localGovt,
-        state,
-        country,
-        userId
-    } = fields;
-
-    const esc = [
-        escapeHTML(address),
-        escapeHTML(localGovt),
-        escapeHTML(state),
-        escapeHTML(country),
-        escapeHTML(userId),
-        insertId
-    ];
-
-    const sql = `update locations set address = ?, localGovt=?, state=?, country=?, userId=? where waqfId = ?`;
-
-    return await transact(sql, esc);
+    try {
+        const {
+            address,
+            localGovt,
+            state,
+            country,
+            userId
+        } = fields;
+    
+        const esc = [
+            escapeHTML(address),
+            escapeHTML(localGovt),
+            escapeHTML(state),
+            escapeHTML(country),
+            escapeHTML(userId),
+            insertId
+        ];
+    
+        const sql = `update locations set address = ?, localGovt=?, state=?, country=?, userId=? where waqfId = ?`;
+    
+        return await transact(sql, esc);
+    } catch (error) {
+        console.warn(error);
+    }
+    
 }
 
 module.exports = {

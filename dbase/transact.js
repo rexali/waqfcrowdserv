@@ -7,14 +7,21 @@ const { connectDb } = require("./connectDb");
  * @returns : object array
  */
 function transact(sql, esc) {
-    const readPromise = new Promise((resolve, reject) => {
-        connectDb().query(sql, esc, function (err, result, fields) {
-            if (err) reject(err);
-            resolve(result);
+    try {
+        const readPromise = new Promise((resolve, reject) => {
+            connectDb().query(sql, esc, function (err, result, fields) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(result);
+            });
         });
-    });
 
-    return readPromise;
+        return readPromise;
+    } catch (error) {
+        console.log(error);
+    }
+
 }
 
 module.exports = {

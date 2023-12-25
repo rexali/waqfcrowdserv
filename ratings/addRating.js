@@ -7,42 +7,44 @@ const { updateRating } = require("./updateRating");
  * @param {object} res - response to user request
  */
 const addRating = async (req, res) => {
-
-    const {
-        rating,
-        userId,
-        waqfId
-    } = req.body;
-
-    const esc = [
-        escapeHTML(rating),
-        escapeHTML(userId),
-        escapeHTML(waqfId)
-    ];
-
-    const check_esc = [userId, waqfId];
-
-    const checkSQL = `select * from ratings where userId=? and waqfId=?`;
-
-    const likes = await transact(checkSQL, check_esc);
-
-    if (likes.length === 0) {
-        const sql = `INSERT INTO ratings(
+    try {
+        const {
             rating,
-            userId,  
+            userId,
             waqfId
-            )VALUES(
-                ?,
-                ?,
-                ?
-                )`;
+        } = req.body;
 
-        res.json(await transact(sql, esc));
-    } else {
+        const esc = [
+            escapeHTML(rating),
+            escapeHTML(userId),
+            escapeHTML(waqfId)
+        ];
 
-        await updateRating(req, res);
+        const check_esc = [userId, waqfId];
+
+        const checkSQL = `select * from ratings where userId=? and waqfId=?`;
+
+        const likes = await transact(checkSQL, check_esc);
+
+        if (likes.length === 0) {
+            const sql = `INSERT INTO ratings(
+                rating,
+                userId,  
+                waqfId
+                )VALUES(
+                    ?,
+                    ?,
+                    ?
+                    )`;
+
+            res.json(await transact(sql, esc));
+        } else {
+
+            await updateRating(req, res);
+        }
+    } catch (error) {
+        console.warn(error);
     }
-
 }
 
 module.exports = {

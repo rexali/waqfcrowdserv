@@ -7,23 +7,28 @@ const { escapeHTML } = require("../utils/escapeHTML");
  */
 const updateHelp = async (req, res) => {
 
-    const {
-        question,
-        answer,
-        userId,
-        helpId
-    } = req.body;
-
-    const esc = [
-        escapeHTML(question),
-        escapeHTML(answer),
-        escapeHTML(userId),
-        helpId
-    ];
-
-    const sql = `update helps set question = ?, answer = ?, userId =?  where helpId = ? `;
-
-    res.json(await transact(sql, esc));
+    try {
+        const {
+            question,
+            answer,
+            userId,
+            helpId
+        } = req.body;
+    
+        const esc = [
+            escapeHTML(question),
+            escapeHTML(answer),
+            escapeHTML(userId),
+            helpId
+        ];
+    
+        const sql = `update helps set question = ?, answer = ?, userId =?  where helpId = ? `;
+    
+        res.json(await transact(sql, esc));
+    } catch (error) {
+     console.warn(error);   
+    }
+    
 }
 
 module.exports = {

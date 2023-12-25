@@ -5,7 +5,8 @@
  * @returns string of text
  */
 function changeHTMLMSQ(email, code) {
-    return `
+    try {
+        return `
     <html>
     <body>
     <h1>Hi there, You can change your password now</h1>
@@ -16,7 +17,11 @@ function changeHTMLMSQ(email, code) {
     <p style="font-size:18px;">Otherwise ignore this message.</P>
     <p style="font-size:18px;">Thank you.</P>
     </body></html>
-    `
+    `;
+    } catch (error) {
+        console.warn(error);
+    }
+
 }
 
 module.exports = {

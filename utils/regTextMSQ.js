@@ -6,8 +6,9 @@
  * @returns string of text
  */
 function regTextMSQ(email, code) {
-    return `
-    
+
+    try {
+        return `
     Hi there! Please confirm your email now.
 
     Welcome, looking forward to taking care of your needs as soon as possible.
@@ -15,8 +16,11 @@ function regTextMSQ(email, code) {
     Please confirm your email to start placing order, copy and paste this link on your browser address bar:
 
     https://express.mujaware.com/?rCode=${code}&email=${email}
-
-    `
+    `;
+    } catch (error) {
+     console.warn(error);   
+    }
+   
 }
 
 module.exports = {

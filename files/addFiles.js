@@ -2,6 +2,7 @@ const fs = require("fs");
 const formidable = require("formidable"); 
 
 const addFiles = (req, res) => {
+  try {
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files) {
       console.log(fields);
@@ -19,6 +20,10 @@ const addFiles = (req, res) => {
         });
       }
     });
+  } catch (error) {
+    console.warn(error);
+  }
+   
   }
 
   module.exports={

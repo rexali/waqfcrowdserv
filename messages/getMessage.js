@@ -5,10 +5,15 @@ const { transact } = require("../dbase/transact");
  * @param {object} res - response to user request
  */
 const getMessage = async (req, res) => {
-    const sql = "SELECT * FROM messages where messageId = ?";
-    const messageId = req.params.messageId;
-    const esc = [messageId];
-    res.json(await transact (sql, esc, res));
+    try {
+        const sql = "SELECT * FROM messages where messageId = ?";
+        const messageId = req.params.id;
+        const esc = [messageId];
+        res.json(await transact(sql, esc, res));
+    } catch (error) {
+        console.warn(error);
+    }
+
 }
 
 module.exports = {

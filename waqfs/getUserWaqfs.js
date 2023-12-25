@@ -6,15 +6,17 @@ const { transact } = require("../dbase/transact");
  */
 const getUserWaqfs = async (req, res) => {
     
-    const {id} = req.params;
+    try {
+        const {id} = req.params;
 
     const waqf_esc = [id];
     const esc = [];
 
-    const waqfSQL = `select waqfs.waqfId, waqfs.name, waqfs.problem, waqfs.goal,waqfs.purpose, 
-    waqfs.description,waqfs.target, waqfs.type, waqfs.collectedAmount, waqfs.expectedAmount,waqfs.planPDF, waqfs.image,waqfs.isDonationAllowed, waqfs.status, waqfs.createdAt, waqfs.endAt, 
-    locations.address, locations.localGovt, locations.state,locations.country from waqfs join 
-    locations on waqfs.waqfId = locations.waqfId where locations.userId = ?`;
+    const waqfSQL = `select * from waqfs where userId = ?`;
+    // const waqfSQL = `select waqfs.waqfId, waqfs.name, waqfs.problem, waqfs.goal,waqfs.purpose, 
+    // waqfs.description,waqfs.target, waqfs.type, waqfs.collectedAmount, waqfs.expectedAmount,waqfs.planPDF, waqfs.image,waqfs.isDonationAllowed, waqfs.status, waqfs.createdAt, waqfs.endAt, 
+    // locations.address, locations.localGovt, locations.state,locations.country from waqfs join 
+    // locations on waqfs.waqfId = locations.waqfId where locations.userId = ?`;
     const commentSQL = 'select * from comments';
     const shareSQL = 'select * from shares';
     const donationSQL = 'select * from donations';
@@ -54,6 +56,10 @@ const getUserWaqfs = async (req, res) => {
         sharesNo: getWaqfShares(waqf.waqfId).length,
         donationsNo: getWaqfDonations(waqf.waqfId).length
     })));
+    } catch (error) {
+        console.warn(error);
+    }
+    
 };
 
 module.exports = {
