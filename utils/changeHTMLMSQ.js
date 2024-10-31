@@ -6,12 +6,13 @@
  */
 function changeHTMLMSQ(email, code) {
     try {
+        
         return `
     <html>
     <body>
     <h1>Hi there, You can change your password now</h1>
     <p>If you request for password change, click this link: 
-    <a href="https://express.mujaware.com/user/change?rCode=${code}&emailAddress=${email}">
+    <a href="https://express.mujaware.com/change-password?rCode=${code}&email=${email}">
     Change your password</a>.
     </p>
     <p style="font-size:18px;">Otherwise ignore this message.</P>

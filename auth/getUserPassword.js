@@ -19,11 +19,9 @@ async function getUserPassword(sql, esc) {
 
           reject(err);
         }
-        if (result[0]?.password) {
-
+        if (result.length === 1) {
           resolve(result[0]?.password);
         } else {
-
           resolve("");
         }
       });
@@ -32,7 +30,7 @@ async function getUserPassword(sql, esc) {
     return promise;
   } catch (error) {
     console.warn(error);
-  }finally{
+  } finally {
     // release path for other
     release();
   }

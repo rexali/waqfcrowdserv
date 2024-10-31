@@ -26,7 +26,7 @@ waqfRouter.post('/:id', deleteUserWaqf);
 // delete a specific waqf
 waqfRouter.delete('/', deleteWaqf);
 // approve a specific waqf
-waqfRouter.patch('/', approveWaqf);
+waqfRouter.patch('/approve', approveWaqf);
 // approve a specific waqf
 waqfRouter.patch('/file', updateWaqfFile);
 // add waqf

@@ -6,9 +6,19 @@ const { transact } = require("../dbase/transact");
  */
 const getNotifications = async(req, res) => {
     try {
+        var page = parseInt(req.query?.page ?? 1);
+        var pageSize = 4;
+        let startIndex = (page - 1) * pageSize;
+        let endIndex = page * pageSize;
         const sql = "SELECT * FROM notifications";
         const esc = [];
-        res.json(await transact(sql, esc)); 
+        let notifications = await transact(sql, esc);
+        notifications = notifications.slice(startIndex, endIndex);
+
+        res.json(notifications.map(notification => ({
+            ...notification,
+            notificationsLength: notifications.length,
+        })));
     } catch (error) {
         console.warn(error);  
     }

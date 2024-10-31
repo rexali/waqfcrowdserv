@@ -32,6 +32,8 @@ const searchWaqf = async (req, res) => {
 
         let waqfs = await transact(waqfSQL, esc);
         waqfs = waqfs.slice(startIndex, endIndex);
+        const waqfsNo = waqfs.length;
+
         const comments = await transact(commentSQL, esc);
         const shares = await transact(shareSQL, esc);
         const donations = await transact(donationSQL, esc);
@@ -73,7 +75,7 @@ const searchWaqf = async (req, res) => {
 
             return totalDonation;
         }
-        
+
         // res.json(searchData(waqfs.map((waqf) => ({
         //     ...waqf,
         //     comments: getWaqfComments(waqf.waqfId),
@@ -81,6 +83,9 @@ const searchWaqf = async (req, res) => {
         //     likesNo: getWaqfLikes(waqf.waqfId).length,
         //     sharesNo: getWaqfShares(waqf.waqfId).length,
         //     donationsNo: getWaqfDonations(waqf.waqfId).length
+        //     totalDonation: getWaqfTotalDonation(waqf.waqfId),
+        //     userIds: getUserIdLikes(waqf.waqfId),
+        //     waqfsNo:waqfsNo,
         // }))));
 
         res.json(waqfs.map((waqf) => ({
@@ -93,6 +98,7 @@ const searchWaqf = async (req, res) => {
             updatesNo: getWaqfUpdates(waqf.waqfId).length,
             totalDonation: getWaqfTotalDonation(waqf.waqfId),
             userIds: getUserIdLikes(waqf.waqfId),
+            waqfsNo:waqfsNo,
         })));
     } catch (error) {
         console.warn(error);

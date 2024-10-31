@@ -5,6 +5,7 @@ const jsonwebtoken = require("jsonwebtoken");
 const { expressjwt } = require("express-jwt");
 const dotenv = require('dotenv');
 dotenv.config();
+
 // const csrf = require('csurf');
 // handle payment
 const { getTransactionUrl } = require("./payment/getTransactionUrl");
@@ -75,12 +76,13 @@ app.use(expressjwt({
      },
      algorithms: ['HS256'],
 }).unless({
-      // verify not these routes
+     // verify not these routes
      path: [
           '/',
           '/webhook',
+          '/webhook-server',
           '/verify_transaction',
-          '/waqfs/*',
+          '/waqfs',
           '/waqfs/*/comments',
           '/waqfs/*/comments/*/replies',
           '/waqfs/*/updates',
@@ -127,7 +129,7 @@ app.get("/jwt", (req, res) => {
 //      res.json({ csrfToken: req.csrfToken() })
 // });
 // get paystack webhook response
-app.post("/server_webhook", getWebhookData);
+app.post("/webhook-server", getWebhookData);
 // verify paystack transaction
 app.post('/verify_transaction', verifyTransaction);
 // get paystack transaction url
@@ -135,7 +137,8 @@ app.post('/get_trasaction_url', getTransactionUrl);
 // server home
 app.get("/", (req, res) => {
      try {
-          res.status()
+          res.status(200);
+          res.type('html');
           res.render("home", {});
      } catch (error) {
           console.warn(error);
@@ -144,6 +147,9 @@ app.get("/", (req, res) => {
 // render 404 page
 app.use((req, res) => {
      try {
+          if (res.statusCode === 401) {
+               res.status(404).render("404", {});
+          }
           res.status(404).render("404", {});
      } catch (error) {
           console.warn(error);
@@ -155,3 +161,5 @@ app.use((req, res) => {
 app.listen(PORT, HOST, () => {
      console.log(`The server host is ${HOST} and is listening at port ${PORT}`);
 });
+
+module.exports = app;

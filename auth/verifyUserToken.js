@@ -12,7 +12,7 @@ async function verifyUserToken(req, res) {
        const token = req.body.token || req.cookies.token;
        try {
               let decoded = jwt.verify(token, process.env.SECRET_KEY);
-              if (decoded.result[0].userId && decoded.result[0].email) {
+              if (decoded.result[0]?.userId && decoded.result[0]?.email) {
                      let profileEsc = [decoded.result[0].userId];
                      const sql2 = `SELECT photo FROM profiles WHERE userId = ?`;
                      const profile = await transact(sql2, profileEsc);
@@ -22,6 +22,7 @@ async function verifyUserToken(req, res) {
                             token,
                             email: decoded.result[0].email,
                             userId: decoded.result[0].userId,
+                            role: decoded.result[0].role,
                             photo,
                      });
               } else {

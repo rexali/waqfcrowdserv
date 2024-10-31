@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const getWebhookData = (req, res) => {
+const getWebhookData = async (req, res) => {
     try {
         const secret = process.env.SECRET_KEY;
         if (["52.31.139.75", "52.49.173.169", "52.214.14.220"].includes(req.ip)) {
@@ -16,6 +16,7 @@ const getWebhookData = (req, res) => {
                 res.json(event);
             }
         }
+
     } catch (error) {
         console.warn(error);
     }

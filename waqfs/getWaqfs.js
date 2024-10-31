@@ -21,8 +21,6 @@ const getWaqfs = async (req, res) => {
         // locations.address, locations.localGovt, locations.state,locations.country from waqfs join 
         // locations on waqfs.waqfId = locations.waqfId;`;
 
-        // limit 2 offset ?
-
         const commentSQL = 'select * from comments';
         const shareSQL = 'select * from shares';
         const donationSQL = 'select * from donations';
@@ -37,13 +35,14 @@ const getWaqfs = async (req, res) => {
 
         const esc = [];
         let waqfs = await transact(waqfSQL, esc);
+        const waqfsNo = waqfs.length;
         waqfs = waqfs.slice(startIndex, endIndex);
         const comments = await transact(commentSQL, esc);
         const shares = await transact(shareSQL, esc);
         const donations = await transact(donationSQL, esc);
         const likes = await transact(likeSQL, esc);
         const ratings = await transact(ratingSQL, esc);
-        const updates = await transact(updateSQL, esc);
+        const updates = await transact(updateSQL, esc); 
 
         function getWaqfComments(id) {
 
@@ -97,6 +96,7 @@ const getWaqfs = async (req, res) => {
             ratingsNo: getAvgRatings(waqf.waqfId),
             userIds: getUserIdLikes(waqf.waqfId),
             totalDonation: getWaqfTotalDonation(waqf.waqfId),
+            waqfsNo:waqfsNo,
         })));
     } catch (error) {
         console.warn(error);

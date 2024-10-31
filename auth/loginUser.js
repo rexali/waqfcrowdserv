@@ -52,8 +52,8 @@ const loginUser = async (req, res) => {
         }
     //    verify the password with a given password 
         if (checkpass(DbPassword, newPassword)) {  
-            const sql = `SELECT userId, email FROM users WHERE email = ?`;
-            const { token, userId, email } = await getUserToken(sql, esc);
+            const sql = `SELECT userId, email, role FROM users WHERE email = ?`;
+            const { token, userId, email, role} = await getUserToken(sql, esc);
 
             res.cookie('token', token, { httpOnly: true, secure: false });
 
@@ -62,12 +62,12 @@ const loginUser = async (req, res) => {
                 token,
                 userId,
                 email,
+                role
             });
-
         } else {
-
             res.json({
-                result: 'password mismatch'
+                result: false,
+                error:'password mismatch',
             });
         }
 

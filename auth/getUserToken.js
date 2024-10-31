@@ -12,31 +12,31 @@ const mutex = new Mutex();
  * @param {Object} res - request object
  */
 async function getUserToken(sql, esc) {
-   // acquire access to the path to do operation (for race condition)
-   const release = await mutex.acquire();
+  // acquire access to the path to do operation (for race condition)
+  const release = await mutex.acquire();
   try {
     const tokenPromise = new Promise((resolve, reject) => {
       connectDb().query(sql, esc, function (err, result, fields) {
         if (err) {
           reject(err);
         }
-        const [{ userId, email }] = result;
+        const [{ userId, email, role }] = result;
         const jwtSecret = process.env.SECRET_KEY;
         const token = jsonwebtoken.sign(
           { result },
           jwtSecret,
-          { noTimestamp: true, expiresIn: '2h' }
+          { noTimestamp: true, expiresIn: '24h' }
         );
-        resolve({ token, userId, email })
+        resolve({ token, userId, email, role })
       });
     });
 
     return tokenPromise;
   } catch (error) {
     console.log(error);
-  }finally{
-     // release path for other
-     release();
+  } finally {
+    // release path for other
+    release();
   }
 
 }

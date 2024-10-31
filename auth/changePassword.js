@@ -17,12 +17,12 @@ const changePassword = async (req, res) => {
     try {
         const {
             email,
-            rCOde,
+            rCode,
             password
         } = req.body;
 
         const newEmail = escapeHTML(email);
-        const newCode = escapeHTML(rCOde);
+        const newCode = escapeHTML(rCode);
         const newPassword = escapeHTML(password);
 
         const esc = [
@@ -30,7 +30,7 @@ const changePassword = async (req, res) => {
             newCode
         ];
 
-        const sql = "SELECT email FROM users WHERE email =? and rCOde =?";
+        const sql = "SELECT email FROM users WHERE email =? and rCode =?";
 
         let result = await isUserEmail(sql, esc);
 
@@ -40,7 +40,7 @@ const changePassword = async (req, res) => {
                 newEmail,
                 newCode
             ];
-            let sql = "UPDATE users SET password =? WHERE email=? AND rCOde =?";
+            let sql = "UPDATE users SET password =? WHERE email=? AND rCode =?";
             res.json(await transact(sql, esc));
         }
     } catch (error) {
