@@ -40,10 +40,7 @@ const { subscriptionRouter } = require('./subscriptions/subscriptionRoute')
 // instantiate express
 const app = express();
 // port
-const PORT = 3001;
-// host
-const HOST = "localhost"; //"127.0.0.1";
-// const HOST = "192.168.1.100";
+const PORT = process.env.PORT || 4004;
 // for parsing application/json
 app.use(express.json());
 // for parsing application/x-www-form-urlencoded
@@ -144,6 +141,10 @@ app.get("/", (req, res) => {
           console.warn(error);
      }
 });
+// server home
+app.get("/health", async (req, res) => {
+     res.send("I am fine");
+ });
 // render 404 page
 app.use((req, res) => {
      try {
@@ -158,8 +159,12 @@ app.use((req, res) => {
 
 // listent to server  
 // (1) 192.168.1.107 (2) 192.168.70.35 (3) 192.168.1.101
-app.listen(PORT, HOST, () => {
-     console.log(`The server host is ${HOST} and is listening at port ${PORT}`);
-});
-
-module.exports = app;
+// listent to server  
+const server = app.listen(PORT, () => {
+     // log to the console
+     console.log(`The server is listening at port ${PORT} !!!`);
+ });
+ 
+ server.keepAliveTimeout = 120 * 1000;
+ server.headersTimeout = 120 * 1000
+// module.exports = app;
