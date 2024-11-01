@@ -85,6 +85,7 @@ app.use(expressjwt({
           '/waqfs/*/updates',
           '/csrf-token',
           '/jwt',
+          '/health'
      ]
 })
 );
