@@ -36,7 +36,8 @@ const { postRouter } = require("./posts/postRoutes");
 const { helpRouter } = require("./helps/helpRoutes");
 const { updateRouter } = require("./updates/updateRoutes");
 const { securedToken, decodeSecuredToken } = require("./auth/securedToken");
-const { subscriptionRouter } = require('./subscriptions/subscriptionRoute')
+const { subscriptionRouter } = require('./subscriptions/subscriptionRoute');
+const { connectDb } = require("./dbase/connectDb");
 // instantiate express
 const app = express();
 // port
@@ -85,7 +86,8 @@ app.use(expressjwt({
           '/waqfs/*/updates',
           '/csrf-token',
           '/jwt',
-          '/health'
+          '/health',
+          '/favicon.ico'
      ]
 })
 );
@@ -135,6 +137,7 @@ app.post('/get_trasaction_url', getTransactionUrl);
 // server home
 app.get("/", (req, res) => {
      try {
+          // connectDb();
           res.status(200);
           res.type('html');
           res.render("home", {});
