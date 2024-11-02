@@ -9,11 +9,15 @@ const { connectDb } = require("./connectDb");
 function transact(sql, esc) {
     try {
         const readPromise = new Promise((resolve, reject) => {
-            connectDb().query(sql, esc, function (err, result, fields) {
+            const conn = connectDb();
+            conn.promise().query(sql, esc, function (err, result, fields) {
                 if (err) {
                     reject(err);
                 }
                 resolve(result);
+            }).then(()=>{
+                conn.end();
+                console.log("Connected!");
             });
         });
 
