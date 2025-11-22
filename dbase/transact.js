@@ -1,4 +1,4 @@
-const { connectDb } = require("./connectDb");
+const { connectDb,pool } = require("./connectDb");
 
 /**
  * Perform transaction - crude 0r read or update or delete
@@ -6,7 +6,7 @@ const { connectDb } = require("./connectDb");
  * @param {Array} esc:  parameters to be escaped in query string
  * @returns : object array
  */
-function transact(sql, esc) {
+function transact2(sql, esc) {
     try {
         const readPromise = new Promise((resolve, reject) => {
             const conn = connectDb();
@@ -28,6 +28,24 @@ function transact(sql, esc) {
 
 }
 
+function transact(sql, esc) {
+    let connection;
+    try {
+        connection = await pool.getConnection(); // Get a connection from the pool
+        const [rows,fields] = await connection.execute(sql,esc);
+        return rows;
+    } catch (err) {
+        console.error('Error executing query:', err);
+        throw err;
+    } finally {
+        if (connection) connection.release(); // Release the connection back to the pool
+    }
+}
+    
+
+
+
 module.exports = {
-    transact
+    transact,
+    transact2
 }
