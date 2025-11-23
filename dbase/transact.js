@@ -28,7 +28,7 @@ function transact2(sql, esc) {
 
 }
 
-function transact(sql, esc) {
+async function transact(sql, esc) {
     let connection;
     try {
         connection = await pool.getConnection(); // Get a connection from the pool
